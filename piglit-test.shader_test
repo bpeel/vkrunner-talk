@@ -1,0 +1,24 @@
+[require]
+GL >= 4.3
+GLSL >= 4.30
+
+[vertex shader passthrough]
+
+[fragment shader]
+#version 430
+
+uniform vec4 color;
+uniform float multiplier;
+layout(location = 0) out vec4 color_out;
+
+void
+main()
+{
+        color_out = color * multiplier;
+}
+
+[test]
+uniform vec4 color 0.5 0.25 0.5 1.0
+uniform float multiplier 0.5
+draw rect -1 -1 2 2
+probe all rgb 0.25 0.125 0.25

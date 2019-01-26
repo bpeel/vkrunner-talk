@@ -29,24 +29,7 @@ SVG: vkrunner-logo.svg
 ## Example
 
 ```
-[vertex shader passthrough]
-
-[fragment shader]
-#version 450
-
-layout(location = 0) out vec4 color_out;
-
-void
-main()
-{
-        color_out = vec4(0.0, 1.0, 0.0, 1.0);
-}
-
-[test]
-# Fill the framebuffer with the output from the shader
-draw rect -1 -1 2 2
-# Check that we got the colour we wanted
-probe all rgba 1.0 0.0 0.0 1.0
+#include simple-example.shader_test
 ```
 
 ---
@@ -95,28 +78,5 @@ PIGLIT: {"result": "fail" }
 ## shader_runner example
 
 ```
-[require]
-GL >= 4.3
-GLSL >= 4.30
-
-[vertex shader passthrough]
-
-[fragment shader]
-#version 430
-
-uniform vec4 color;
-uniform float multiplier;
-layout(location = 0) out vec4 color_out;
-
-void
-main()
-{
-        color_out = color * multiplier;
-}
-
-[test]
-uniform vec4 color 0.5 0.25 0.5 1.0
-uniform float multiplier 0.5
-draw rect -1 -1 2 2
-probe all rgb 0.25 0.125 0.25
+#include piglit-test.shader_test
 ```
