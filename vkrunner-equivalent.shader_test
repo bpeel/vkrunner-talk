@@ -1,0 +1,24 @@
+[vertex shader passthrough]
+
+[fragment shader]
+#version 430
+
+layout(push_constant) uniform block {
+        vec4 color;
+        float multiplier;
+};
+layout(location = 0) out vec4 color_out;
+
+void
+main()
+{
+        color_out = color * multiplier;
+}
+
+[test]
+# Set color
+uniform vec4 0    0.5 0.25 0.5 1.0
+# Set multiplier
+uniform float 16    0.5
+draw rect -1 -1 2 2
+probe all rgb 0.25 0.125 0.25

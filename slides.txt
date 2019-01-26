@@ -80,3 +80,11 @@ PIGLIT: {"result": "fail" }
 ```
 #include piglit-test.shader_test
 ```
+
+---
+
+## VkRunner equivalent
+
+```
+#include vkrunner-equivalent.shader_test
+```
