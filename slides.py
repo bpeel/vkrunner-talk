@@ -76,29 +76,34 @@ def get_slides(f):
             buf.append(line)
     yield buf_to_text(buf)
 
-def line_to_render_object(line):
+def line_to_render_object(line, in_code):
     md = re.match(r'^SVG: +([^\s]+)\s*$', line)
     if md:
         return ImageRenderObject(md.group(1))
-    
-    font = "Sans"
-    font_size = 16
+
+    if in_code:
+        font = "Mono"
+        font_size = 10
+    else:
+        font = "Sans"
+        font_size = 16
 
     layout = PangoCairo.create_layout(cr)
 
-    md = re.match(r'(#+) +(.*)', line)
-    if md:
-        font_size *= 1.2 * len(md.group(1))
-        line = md.group(2)
-    else:
-        md = re.match(r'\* +(.*)', line)
+    if not in_code:
+        md = re.match(r'(#+) +(.*)', line)
         if md:
-            line = "\u2022\t" + md.group(1)
-            tab_stop = 10 * POINTS_PER_MM * Pango.SCALE
-            tab_array = Pango.TabArray(1, False)
-            tab_array.set_tab(0, Pango.TabAlign.LEFT, tab_stop)
-            layout.set_tabs(tab_array)
-            layout.set_indent(-tab_stop)
+            font_size *= 1.2 * len(md.group(1))
+            line = md.group(2)
+        else:
+            md = re.match(r'\* +(.*)', line)
+            if md:
+                line = "\u2022\t" + md.group(1)
+                tab_stop = 10 * POINTS_PER_MM * Pango.SCALE
+                tab_array = Pango.TabArray(1, False)
+                tab_array.set_tab(0, Pango.TabAlign.LEFT, tab_stop)
+                layout.set_tabs(tab_array)
+                layout.set_indent(-tab_stop)
 
     fd = Pango.FontDescription.from_string("{} {}".format(font, font_size))
     layout.set_font_description(fd)
@@ -114,7 +119,15 @@ def render_slide(cr, text):
     background.render_cairo(cr)
     cr.restore()
 
-    objects = [line_to_render_object(line) for line in text.split('\n')]
+    objects = []
+    in_code = False
+
+    for line in text.split('\n'):
+        if re.match(r'^```\s*$', line):
+            print(line)
+            in_code = not in_code
+        else:
+            objects.append(line_to_render_object(line, in_code))
 
     total_height = sum(obj.get_height() for obj in objects)
     max_width = max(obj.get_width() for obj in objects)
