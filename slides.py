@@ -93,7 +93,7 @@ def line_to_render_object(line, in_code):
     if not in_code:
         md = re.match(r'(#+) +(.*)', line)
         if md:
-            font_size *= 1.2 * len(md.group(1))
+            font_size *= 1.1 * len(md.group(1))
             line = md.group(2)
         else:
             md = re.match(r'\* +(.*)', line)
