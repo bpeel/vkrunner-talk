@@ -19,6 +19,8 @@ PAGE_HEIGHT = PAGE_WIDTH * 768 // 1366
 
 SVG_PX_PER_MM = 1.0 / 3.542087542087542
 
+background = Rsvg.Handle.new_from_file('background.svg')
+
 class RenderObject:
     pass
 
@@ -107,6 +109,10 @@ def line_to_render_object(line):
 
 def render_slide(cr, text):
     cr.save()
+    # Scale to mm
+    cr.scale(1.0 * SVG_PX_PER_MM, 1.0 * SVG_PX_PER_MM)
+    background.render_cairo(cr)
+    cr.restore()
 
     objects = [line_to_render_object(line) for line in text.split('\n')]
 
@@ -120,8 +126,6 @@ def render_slide(cr, text):
         cr.move_to(x_pos, y_pos)
         obj.render(cr, x_pos, y_pos)
         y_pos += obj.get_height()
-
-    cr.restore()
 
 surface = cairo.PDFSurface("slides.pdf",
                            PAGE_WIDTH * POINTS_PER_MM,
