@@ -1,0 +1,13 @@
+== Title ==
+
+VkRunner: a Vulkan shader test tool
+
+== Abstract ==
+
+A presentation of VkRunner which is a tool to help test the compiler in your Vulkan driver using simple high-level scripts.
+
+== Description ==
+
+Perhaps the largest part of developing a modern graphics driver revolves around getting the compiler to generate the correct code. In order to achieve this, extensive testing is essential. For OpenGL we have Piglit and its convenient shader_runner script format. On Vulkan, writing the boilerplate needed to test a simple shader is a lot more work. This is where VkRunner steps in to implement all of the boilerplate once and provide a very high-level scripting language to make it easy to write a test. The scripts contain the required shaders, any data they need to run and simple commands to draw or compute and probe the results.
+
+This talk will give an overview of the functionality of VkRunner, its current status and the plans for its future.

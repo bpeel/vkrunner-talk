@@ -1,0 +1,70 @@
+* Introduction
+  * What is VkRunner?
+    * Tool to test shaders on your Vulkan driver
+    * Inspired by shader_runner
+    * Minimal overhead to execute a script
+    * Just write the scripts and some simple commands to execute them
+    * Standalone tool, runs the script and reports status
+
+  * History
+    * Work on ARB_gl_spirv
+      * Adding SPIR-V support to the i965 driver in Mesa
+      * Uses the same compiler as Vulkan
+      * Ended up with more more extensive testing of SPIR-V than
+        exists for Vulkan because of automatic test conversion from
+        GLSL tests.
+      * We wanted to quickly be able to verify whether test failures
+        are a general problem with the compiler or a problem specific
+        to SPIR-V on GL.
+      * Run shader_runner tests on Vulkan with the minimum of conversion.
+        * However there are major differences.
+        * shader_runner can use the GL API to query properties of the
+          shader such as variable names.
+        * This information isn’t available in Vulkan so the script has
+          to use explicit offsets for setting UBO/SSBO data.
+      * Some improvements over shader_runner
+        * shader_runner grown organically over time. Lives in a single
+          large C file.
+        * VkRunner code written from scratch with the benefit of
+          hindsight.
+        * Tries to partially automatically generate commands.
+          * Such as systematic method for setting pipeline properties.
+          * Try to support all formats for vertex data and framebuffer.
+
+* Examples
+  * Simple rectangle example to test a particular function.
+  * Using more vertex inputs
+  * Testing an extension
+  * Compute shader
+  * SPIR-V
+    * Example needing manual edit of SPIR-V
+  * Binary
+
+* Current status
+  * Features
+    * All stages
+    * Compute shaders
+    * UBOs/SSBOs
+    * Vertex data, simple drawing
+    * Probing
+    * Library
+  * Integration in Piglit and CTS
+    * Existing library of tests in Piglit
+
+* Future
+  * Missing features
+    * Major feature missing image/texture support.
+      * There is a pull request for this.
+  * More tests
+    * Please add Piglit tests for any Vulkan features you add.
+  * UI
+    * Just for fun.
+  * Video
+    * Example bling for fun.
+    * shadertoy
+  * Amber
+  * Clean up script format?
+
+* Demo?
+
+* Questions
