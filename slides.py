@@ -17,7 +17,7 @@ POINTS_PER_MM = 2.8346457
 PAGE_WIDTH = 297
 PAGE_HEIGHT = PAGE_WIDTH * 768 // 1366
 
-SVG_PX_PER_MM = 25.4 / 96.0
+SVG_PX_PER_MM = 1.0 / 3.542087542087542
 
 class RenderObject:
     pass
@@ -56,7 +56,7 @@ class ImageRenderObject(RenderObject):
         # Scale to mm
         cr.scale(1.0 * SVG_PX_PER_MM, 1.0 * SVG_PX_PER_MM)
         p = cr.get_current_point()
-        cr.translate(y_pos / SVG_PX_PER_MM, y_pos / SVG_PX_PER_MM)
+        cr.translate(x_pos / SVG_PX_PER_MM, y_pos / SVG_PX_PER_MM)
         self.image.render_cairo(cr)
         cr.restore()
 
