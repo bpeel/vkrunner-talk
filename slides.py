@@ -62,8 +62,15 @@ class ImageRenderObject(RenderObject):
         self.image.render_cairo(cr)
         cr.restore()
 
+def replace_include(md):
+    with open(md.group(1)) as f:
+        return f.read()
+
 def buf_to_text(buf):
-    return "".join(buf).strip()
+    return re.sub(r'^#include\s+([^\s]+)\s*$',
+                  replace_include,
+                  "".join(buf).strip(),
+                  flags=re.MULTILINE)
 
 def get_slides(f):
     buf = []
