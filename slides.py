@@ -124,7 +124,6 @@ def render_slide(cr, text):
 
     for line in text.split('\n'):
         if re.match(r'^```\s*$', line):
-            print(line)
             in_code = not in_code
         else:
             objects.append(line_to_render_object(line, in_code))
