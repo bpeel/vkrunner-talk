@@ -17,6 +17,26 @@ POINTS_PER_MM = 2.8346457
 PAGE_WIDTH = 297
 PAGE_HEIGHT = PAGE_WIDTH * 768 // 1366
 
+class RenderObject:
+    pass
+
+class LayoutRenderObject(RenderObject):
+    def __init__(self, layout):
+        self.layout = layout
+
+    def get_height(self):
+        return self.layout.get_pixel_extents()[1].height / POINTS_PER_MM
+
+    def get_width(self):
+        return self.layout.get_pixel_extents()[1].width / POINTS_PER_MM
+
+    def render(self, cr):
+        cr.save()
+        # Remove the mm scale
+        cr.scale(1.0 / POINTS_PER_MM, 1.0 / POINTS_PER_MM)
+        PangoCairo.show_layout(cr, self.layout)
+        cr.restore()
+
 def buf_to_text(buf):
     return "".join(buf).strip()
 
@@ -31,7 +51,7 @@ def get_slides(f):
             buf.append(line)
     yield buf_to_text(buf)
 
-def line_to_layout(line):
+def line_to_render_object(line):
     font = "Sans"
     font_size = 16
 
@@ -56,37 +76,24 @@ def line_to_layout(line):
     layout.set_width(PAGE_WIDTH * 0.7 * POINTS_PER_MM * Pango.SCALE)
     layout.set_text(line, -1)
 
-    return layout
+    return LayoutRenderObject(layout)
 
-def layout_height(layout):
-    return layout.get_pixel_extents()[1].height
-
-def layout_width(layout):
-    return layout.get_pixel_extents()[1].width
-
-def render_paragraph(cr, text):
+def render_slide(cr, text):
     cr.save()
 
-    # Remove the mm scale
-    cr.scale(1.0 / POINTS_PER_MM, 1.0 / POINTS_PER_MM)
+    objects = [line_to_render_object(line) for line in text.split('\n')]
 
-    layouts = [line_to_layout(line) for line in text.split('\n')]
+    total_height = sum(obj.get_height() for obj in objects)
+    max_width = max(obj.get_width() for obj in objects)
 
-    total_height = sum(layout_height(layout) for layout in layouts)
-    max_width = max(layout_width(layout) for layout in layouts)
-    cr.move_to(PAGE_WIDTH / 2.0 * POINTS_PER_MM -
-               max_width / 2.0,
-               PAGE_HEIGHT / 2.0 * POINTS_PER_MM -
-               total_height / 2.0)
+    cr.move_to(PAGE_WIDTH / 2.0 - max_width / 2.0,
+               PAGE_HEIGHT / 2.0 - total_height / 2.0)
 
-    for layout in layouts:
-        PangoCairo.show_layout(cr, layout)
-        cr.rel_move_to(0, layout_height(layout))
+    for obj in objects:
+        obj.render(cr)
+        cr.rel_move_to(0, obj.get_height())
 
     cr.restore()
-
-def render_slide(cr, slide):
-    render_paragraph(cr, slide)    
 
 surface = cairo.PDFSurface("slides.pdf",
                            PAGE_WIDTH * POINTS_PER_MM,
