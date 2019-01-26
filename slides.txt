@@ -9,3 +9,114 @@ SVG: vkrunner-logo.svg
 * Current status
 * Future
 * Questions
+
+---
+
+### Introduction
+
+---
+
+## What is VkRunner?
+
+* Tool to test shaders on your Vulkan driver
+* Inspired by Piglit’s shader_runner
+* Minimal overhead to execute a script
+* Just write the scripts and some simple commands to execute them
+* Standalone tool, runs the script and reports status
+
+---
+
+## Example
+
+```
+[vertex shader passthrough]
+
+[fragment shader]
+#version 450
+
+layout(location = 0) out vec4 color_out;
+
+void
+main()
+{
+        color_out = vec4(0.0, 1.0, 0.0, 1.0);
+}
+
+[test]
+# Fill the framebuffer with the output from the shader
+draw rect -1 -1 2 2
+# Check that we got the colour we wanted
+probe all rgba 1.0 0.0 0.0 1.0
+```
+
+---
+
+## Example
+
+```
+$ vkrunner ./simple-example.shader_test
+Command failed at line 18
+Probe color at (0,0)
+  Expected: 1.000000 0.000000 0.000000 1.000000
+  Observed: 0.000000 1.000000 0.000000 1.000000
+PIGLIT: {"result": "fail" }
+```
+
+---
+
+### History
+
+---
+
+## ARB_gl_spirv
+
+* VkRunner was created during Igalia’s work to add support for ARB_gl_spirv to the i965 driver in Mesa.
+* ARB_gl_spirv uses the same compiler as Intel’s Vulkan driver.
+* We were testing this with an adaptation of Piglit’s shader_runner.
+
+---
+
+* shader_runner is the same principle as VkRunner.
+* Tested ARB_gl_spirv by automatically converting existing shader_runner tests to SPIR-V.
+* Piglit has many many tests.
+* This ended up testing more of the Intel SPIR-V compiler than was tested with existing Vulkan tests.
+* We wanted a quick way to verify whether test failures were specific to SPIR-V on OpenGL or also happen with Vulkan.
+
+---
+
+* shader_runner tests can be converted to VkRunner with minimal changes.
+* However there are differences because of how Vulkan works.
+* For GL, shader_runner can use the API to query properties of the shader such as the uniform names.
+* This isn’t available in Vulkan.
+* Instead we use explicit offsets to set uniforms and SSBOs.
+
+---
+
+## shader_runner example
+
+```
+[require]
+GL >= 4.3
+GLSL >= 4.30
+
+[vertex shader passthrough]
+
+[fragment shader]
+#version 430
+
+uniform vec4 color;
+uniform float multiplier;
+layout(location = 0) out vec4 color_out;
+
+void
+main()
+{
+        color_out = color * multiplier;
+}
+
+[test]
+uniform vec4 color 0.5 0.25 0.5 1.0
+uniform float multiplier 0.5
+draw rect -1 -1 2 2
+probe all rgb 0.25 0.125 0.25
+```
