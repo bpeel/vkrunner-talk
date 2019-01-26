@@ -17,6 +17,8 @@ POINTS_PER_MM = 2.8346457
 PAGE_WIDTH = 297
 PAGE_HEIGHT = PAGE_WIDTH * 768 // 1366
 
+SVG_PX_PER_MM = 25.4 / 96.0
+
 class RenderObject:
     pass
 
@@ -30,11 +32,32 @@ class LayoutRenderObject(RenderObject):
     def get_width(self):
         return self.layout.get_pixel_extents()[1].width / POINTS_PER_MM
 
-    def render(self, cr):
+    def render(self, cr, x_pos, y_pos):
         cr.save()
+        cr.move_to(x_pos, y_pos)
         # Remove the mm scale
         cr.scale(1.0 / POINTS_PER_MM, 1.0 / POINTS_PER_MM)
         PangoCairo.show_layout(cr, self.layout)
+        cr.restore()
+
+class ImageRenderObject(RenderObject):
+    def __init__(self, filename):
+        self.image = Rsvg.Handle.new_from_file(filename)
+        self.dim = self.image.get_dimensions()
+
+    def get_width(self):
+        return self.dim.width * SVG_PX_PER_MM
+
+    def get_height(self):
+        return self.dim.height * SVG_PX_PER_MM
+
+    def render(self, cr, x_pos, y_pos):
+        cr.save()
+        # Scale to mm
+        cr.scale(1.0 * SVG_PX_PER_MM, 1.0 * SVG_PX_PER_MM)
+        p = cr.get_current_point()
+        cr.translate(y_pos / SVG_PX_PER_MM, y_pos / SVG_PX_PER_MM)
+        self.image.render_cairo(cr)
         cr.restore()
 
 def buf_to_text(buf):
@@ -52,6 +75,10 @@ def get_slides(f):
     yield buf_to_text(buf)
 
 def line_to_render_object(line):
+    md = re.match(r'^SVG: +([^\s]+)\s*$', line)
+    if md:
+        return ImageRenderObject(md.group(1))
+    
     font = "Sans"
     font_size = 16
 
@@ -86,12 +113,13 @@ def render_slide(cr, text):
     total_height = sum(obj.get_height() for obj in objects)
     max_width = max(obj.get_width() for obj in objects)
 
-    cr.move_to(PAGE_WIDTH / 2.0 - max_width / 2.0,
-               PAGE_HEIGHT / 2.0 - total_height / 2.0)
+    x_pos = PAGE_WIDTH / 2.0 - max_width / 2.0
+    y_pos = PAGE_HEIGHT / 2.0 - total_height / 2.0
 
     for obj in objects:
-        obj.render(cr)
-        cr.rel_move_to(0, obj.get_height())
+        cr.move_to(x_pos, y_pos)
+        obj.render(cr, x_pos, y_pos)
+        y_pos += obj.get_height()
 
     cr.restore()
 
