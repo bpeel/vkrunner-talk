@@ -47,6 +47,16 @@ PIGLIT: {"result": "fail" }
 
 ---
 
+## Behind the scenes
+
+* Compiles the shader to SPIR-V by invoking glslang as an external process.
+* Creates pipelines for the state for each draw command.
+* Creates an offscreen framebuffer (no window system support).
+* Puts test commands into a command buffer and executes it.
+* Probes result.
+
+---
+
 ### History
 
 ---
@@ -77,14 +87,34 @@ PIGLIT: {"result": "fail" }
 
 ## shader_runner example
 
-```
-#include piglit-test.shader_test
-```
+SVG: piglit-test-01.svg
+
+---
+
+## shader_runner example
+
+SVG: piglit-test-02.svg
+
+---
+
+## shader_runner example
+
+SVG: piglit-test-03.svg
 
 ---
 
 ## VkRunner equivalent
 
-```
-#include vkrunner-equivalent.shader_test
-```
+SVG: vkrunner-equivalent-01.svg
+
+---
+
+## VkRunner equivalent
+
+SVG: vkrunner-equivalent-02.svg
+
+---
+
+## VkRunner equivalent
+
+SVG: vkrunner-equivalent-03.svg
