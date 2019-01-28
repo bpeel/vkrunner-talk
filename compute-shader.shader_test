@@ -1,0 +1,23 @@
+[compute shader]
+#version 450
+
+layout(binding = 0) buffer block {
+        float values[];
+};
+
+void
+main()
+{
+        // Calculate some square roots
+        values[gl_WorkGroupID.x] = sqrt(gl_WorkGroupID.x);
+}
+
+[test]
+ssbo 0 4096
+
+# Run the compute shader
+compute 1024 1 1
+
+# Probe a few points in the buffer
+probe ssbo float 0 0 ~= 0    1.0 1.4142 1.7320 2.0
+probe ssbo float 0 2304 ~=   24.0  

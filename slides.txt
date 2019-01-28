@@ -184,3 +184,19 @@ draw arrays indexed TRIANGLE_STRIP 0 20
 ## Vertex data
 
 SVG: vertex-data-all.svg
+
+---
+
+## Requires section
+
+```
+#include requires.shader_test
+```
+
+---
+
+## Compute shader
+
+```
+#include compute-shader.shader_test
+```

@@ -1,0 +1,10 @@
+[require]
+# Require an extension for the test to pass
+VK_KHR_8bit_storage
+
+# Change the framebuffer format
+framebuffer R32_SFLOAT
+fbsize 1024 768
+
+# Require an optional Vulkan feature
+shaderInt16
