@@ -103,14 +103,24 @@ def line_to_render_object(line, in_code):
             font_size *= 1.1 * len(md.group(1))
             line = md.group(2)
         else:
-            md = re.match(r'\* +(.*)', line)
+            md = re.match(r'((?:  )*)\* +(.*)', line)
             if md:
-                line = "\u2022\t" + md.group(1)
+                spaces = len(md.group(1)) // 2
+                line = "\u2022\t" + md.group(2)
                 tab_stop = 10 * POINTS_PER_MM * Pango.SCALE
-                tab_array = Pango.TabArray(1, False)
-                tab_array.set_tab(0, Pango.TabAlign.LEFT, tab_stop)
+                if spaces > 0:
+                    n_tabs = 2
+                else:
+                    n_tabs = 1
+                tab_array = Pango.TabArray(n_tabs, False)
+                if spaces > 0:
+                    line = "\t" + line
+                    tab_array.set_tab(0, Pango.TabAlign.LEFT, tab_stop * spaces)
+                tab_array.set_tab(n_tabs - 1,
+                                  Pango.TabAlign.LEFT,
+                                  tab_stop * (spaces + 1))
                 layout.set_tabs(tab_array)
-                layout.set_indent(-tab_stop)
+                layout.set_indent(-tab_stop * (spaces + 1))
 
     fd = Pango.FontDescription.from_string("{} {}".format(font, font_size))
     layout.set_font_description(fd)
