@@ -156,7 +156,7 @@ def render_slide(cr, text):
         obj.render(cr, x_pos, y_pos)
         y_pos += obj.get_height()
 
-surface = cairo.PDFSurface("slides.pdf",
+surface = cairo.PDFSurface("vkrunner-slides.pdf",
                            PAGE_WIDTH * POINTS_PER_MM,
                            PAGE_HEIGHT * POINTS_PER_MM)
 
