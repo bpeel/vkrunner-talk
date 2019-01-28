@@ -247,3 +247,80 @@ vkrunner precompiled/*.shader_test
 ```
 #include precompiled/simple-spirv.shader_test
 ```
+
+---
+
+### Current status
+
+---
+
+## Features
+
+* All shader stages
+* UBOs/SSBOs
+* Vertex data, simple drawing
+* Probing the framebuffer or SSBOs
+
+
+---
+
+## Library version
+
+```
+#include library.c
+```
+
+---
+
+## Integration
+
+* Integrated into Khronos Vulkan CTS
+  * Currently only experimental tests
+  * Uses VkRunner’s API
+
+* Integrated into Piglit
+  * Has real tests
+  * Runs on Intel’s CI
+
+---
+
+### Future
+
+---
+
+## Missing features
+
+* Image / texture support
+  * Although there is a pull request for this
+* Arrays of buffer bindings
+* Probably a lot of other things
+
+---
+
+## User Interface
+
+SVG: ui.svg
+
+---
+
+## Video?
+
+* There’s a branch for making animations.
+* Adds a magic uniform to specify the frame number.
+* Can be used like an offline version of shadertoy
+
+---
+
+## Amber
+
+* Google are working on a similar tool.
+* Can use the same scripting format as VkRunner.
+* Yet to see which where it will lead.
+
+---
+
+## github.com/Igalia/vkrunner
+
+---
+
+### Questions?
