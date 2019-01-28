@@ -1,0 +1,31 @@
+[require]
+framebuffer R32_SFLOAT
+
+[vertex shader passthrough]
+
+[fragment shader spirv]
+               OpCapability Shader
+          %1 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %main "main" %color
+               OpExecutionMode %main OriginUpperLeft
+               OpSource GLSL 450
+               OpDecorate %color Location 0
+       %void = OpTypeVoid
+          %3 = OpTypeFunction %void
+      %float = OpTypeFloat 32
+%_ptr_Output_float = OpTypePointer Output %float
+      %color = OpVariable %_ptr_Output_float Output
+    %float_1 = OpConstant %float 1
+       %main = OpFunction %void None %3
+          %5 = OpLabel
+               OpStore %color %float_1
+               OpReturn
+               OpFunctionEnd
+
+[test]
+clear
+
+draw rect -1 -1 2 2
+
+probe all rgb 1 0 0

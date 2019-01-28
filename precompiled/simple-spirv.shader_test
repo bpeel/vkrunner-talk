@@ -1,0 +1,18 @@
+[require]
+framebuffer R32_SFLOAT
+
+[vertex shader passthrough]
+
+[fragment shader binary]
+7230203 10000 70000 a 0 20011 1 6000b 1 4c534c47 6474732e
+3035342e 0 3000e 0 1 6000f 4 2 6e69616d 0 3 30010 2 7 30003
+2 1c2 40047 3 1e 0 20013 4 30021 5 4 30016 6 20 40020 7 3 6
+4003b 7 3 3 4002b 6 8 3f800000 50036 4 2 0 5 200f8 9 3003e 3
+8 100fd 10038
+
+[test]
+clear
+
+draw rect -1 -1 2 2
+
+probe all rgb 1 0 0

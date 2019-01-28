@@ -200,3 +200,50 @@ SVG: vertex-data-all.svg
 ```
 #include compute-shader.shader_test
 ```
+
+---
+
+## SPIR-V source
+
+```
+[fragment shader spirv]
+               OpCapability Shader
+          %1 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %main "main" %color
+               OpExecutionMode %main OriginUpperLeft
+               OpSource GLSL 450
+               OpDecorate %color Location 0
+       %void = OpTypeVoid
+          %3 = OpTypeFunction %void
+      %float = OpTypeFloat 32
+%_ptr_Output_float = OpTypePointer Output %float
+      %color = OpVariable %_ptr_Output_float Output
+    %float_1 = OpConstant %float 1
+       %main = OpFunction %void None %3
+          %5 = OpLabel
+               OpStore %color %float_1
+               OpReturn
+               OpFunctionEnd
+```
+
+---
+
+## Binary source
+
+* Script available to precompile scripts to binary format
+
+```
+./precompile-script.py -o precompiled *.shader_test
+vkrunner precompiled/*.shader_test
+```
+
+* Useful for running on devices where running the compiler isn’t practical.
+
+---
+
+## Binary source
+
+```
+#include precompiled/simple-spirv.shader_test
+```
