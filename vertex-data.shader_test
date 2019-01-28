@@ -1,0 +1,62 @@
+[vertex shader]
+#version 450
+
+layout(location = 0) in vec2 position;
+layout(location = 1) in vec3 color_in;
+layout(location = 0) out vec3 color_out;
+
+void
+main()
+{
+        gl_Position = vec4(position, 0.0, 1.0);
+        color_out = color_in;
+}
+
+[fragment shader]
+#version 450
+
+layout(location = 0) in vec3 color_in;
+layout(location = 0) out vec4 color_out;
+
+void
+main()
+{
+        color_out = vec4(color_in, 1.0);
+}
+
+[vertex data]
+# Position      Colour
+0/R32G32_SFLOAT 1/A8B8G8R8_UNORM_PACK32
+
+0.4   -0.4      0xff00a0ff
+0.7   -0.7      0xff00a0ff
+0.4   0.4       0xff00a0ff
+0.7   0.7       0xff00a0ff
+
+0.4    0.4      0xff0000ff
+0.7    0.7      0xff0000ff
+-0.4   0.4      0xff0000ff
+-0.7   0.7      0xff0000ff
+
+-0.4   0.4      0xff00ff00
+-0.7   0.7      0xff00ff00
+-0.4   -0.4     0xff00ff00
+-0.7   -0.7     0xff00ff00
+
+0.4    -0.4     0xffff0000
+0.7    -0.7     0xffff0000
+-0.4   -0.4     0xffff0000
+-0.7   -0.7     0xffff0000
+
+[indices]
+0 1 2 3     65535
+4 5 6 7     65535
+8 9 10 11   65535
+12 13 14 15 65535
+
+[test]
+clear
+
+primitiveRestartEnable true
+
+draw arrays indexed TRIANGLE_STRIP 0 20

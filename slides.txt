@@ -118,3 +118,69 @@ SVG: vkrunner-equivalent-02.svg
 ## VkRunner equivalent
 
 SVG: vkrunner-equivalent-03.svg
+
+---
+
+## Some improvements over shader_runner
+
+* shader_runner code grown organically over time. Lives in a single large C file.
+* VkRunner code written from scratch with the benefit of hindsight.
+* Tries to partially automatically generate commands.
+  * Systematic method for setting pipeline properties.
+  * Try to support all formats for vertex data and framebuffer.
+
+---
+
+### Examples
+
+---
+
+## Vertex data
+
+SVG: vertex-data-01.svg
+
+---
+
+## Vertex data
+
+SVG: vertex-data-02.svg
+
+---
+
+## Vertex data
+
+SVG: vertex-data-03.svg
+
+---
+
+## Vertex data
+
+SVG: vertex-data-shader.svg
+
+---
+
+## Indices
+
+```
+[indices]
+0 1 2 3     65535
+4 5 6 7     65535
+8 9 10 11   65535
+12 13 14 15 65535
+```
+
+---
+
+## Draw command
+
+```
+primitiveRestartEnable true
+
+draw arrays indexed TRIANGLE_STRIP 0 20
+```
+
+---
+
+## Vertex data
+
+SVG: vertex-data-all.svg
